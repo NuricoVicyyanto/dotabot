@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import requests
 
 intents = discord.Intents.default()
 intents.typing = False
@@ -7,6 +8,7 @@ intents.presences = False
 intents.message_content = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
+url = "https://dotabot.mitrajamurbondowoso.com/public/get-matches-player?id_player="
 
 @bot.event
 async def on_ready():
@@ -16,6 +18,10 @@ async def on_ready():
 async def input(ctx, *, input_data):
     try:
         await ctx.send(f'Data yang Anda masukkan: {input_data}')
+        response = requests.get(url + input_data)
+        data_json = response.json()
+        await ctx.send('Data JSON yang diperoleh:')
+        await ctx.send(f'```json\n{data_json}\n```')
     except discord.errors.HTTPException:
         await ctx.send('Terjadi kesalahan saat mengirim pesan. Mohon coba lagi.')
 
