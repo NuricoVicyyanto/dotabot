@@ -1,6 +1,9 @@
 import discord
 from discord.ext import commands
 import requests
+from tabulate import tabulate
+import pandas as pd
+from discord import File
 
 intents = discord.Intents.default()
 intents.typing = False
@@ -10,9 +13,11 @@ intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 url = "https://dotabot.mitrajamurbondowoso.com/public/get-matches-player?id_player="
 
+image_path = 'table.txt'
+
 @bot.event
 async def on_ready():
-    print('Bot sudah siap.')
+    print(f'Bot siap')
 
 @bot.command()
 async def input(ctx, *, input_data):
@@ -20,8 +25,18 @@ async def input(ctx, *, input_data):
         await ctx.send(f'Data yang Anda masukkan: {input_data}')
         response = requests.get(url + input_data)
         data_json = response.json()
-        await ctx.send('Data JSON yang diperoleh:')
-        await ctx.send(f'```json\n{data_json}\n```')
+        df = pd.DataFrame(data_json)
+
+        table = tabulate(df, headers='keys', tablefmt='fancy_grid')
+
+        with open('table.txt', 'w', encoding="utf-8") as f:
+            f.write(table)
+
+        with open(image_path, 'rb') as f:
+            file = discord.File(f, filename='table.txt')
+
+        await ctx.send("Data Yang Diperoleh :")
+        await ctx.send(file=file)
     except discord.errors.HTTPException:
         await ctx.send('Terjadi kesalahan saat mengirim pesan. Mohon coba lagi.')
 
