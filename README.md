@@ -6,7 +6,7 @@ Implementing a DOTA bot on Discord to detect smurf accounts is a proactive measu
 **Language:** Python
 
 
-## Authors
+## Contributors
 
 - [@nuricovicyyanto](https://github.com/NuricoVicyyanto)
 - [@mnaufalrafifh](https://github.com/mnaufalrafifh)
